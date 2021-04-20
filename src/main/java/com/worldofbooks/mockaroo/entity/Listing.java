@@ -55,11 +55,9 @@ public class Listing {
     @OneToOne(cascade = CascadeType.PERSIST)
     private ListingStatus listingStatus;
 
-    /** TODO
-     * This is going to be the reference to marketplace table
-     */
     @NotNull
-    private double marketplace;
+    @OneToOne(cascade = CascadeType.PERSIST)
+    private MarketPlace marketPlace;
 
     @Column(columnDefinition = "text")
     @NotNull

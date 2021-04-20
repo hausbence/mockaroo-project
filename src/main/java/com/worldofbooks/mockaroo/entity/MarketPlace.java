@@ -13,17 +13,16 @@ import javax.persistence.*;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "listing_status")
-public class ListingStatus {
+@Table(name = "marketplace")
+public class MarketPlace {
 
     @Id
     @NotNull
     private Long id;
 
-    @OneToOne(mappedBy = "listingStatus")
+    @OneToOne(mappedBy = "marketPlace")
     private Listing listing;
 
     @Column(columnDefinition = "text")
-    private String status_name;
-
+    private String marketplace_name;
 }
