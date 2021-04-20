@@ -51,11 +51,9 @@ public class Listing {
     @NotNull
     private double quantity;
 
-    /** TODO
-     * This is going to be the reference to listing status table
-     */
     @NotNull
-    private double listing_status;
+    @OneToOne(cascade = CascadeType.PERSIST)
+    private ListingStatus listingStatus;
 
     /** TODO
      * This is going to be the reference to marketplace table
