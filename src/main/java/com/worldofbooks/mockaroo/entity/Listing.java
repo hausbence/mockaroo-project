@@ -5,11 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Formula;
+import org.hibernate.annotations.Type;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.util.Date;
 import java.util.UUID;
@@ -34,11 +33,9 @@ public class Listing {
     @NotNull
     private String description;
 
-    /** TODO
-     * This is going to be the reference to location table
-     */
     @NotNull
-    private UUID location_id;
+    @OneToOne(cascade = CascadeType.PERSIST)
+    private Location location;
 
     @Column(columnDefinition = "Decimal(10,2)")
     @Min(value = 1)
@@ -54,17 +51,13 @@ public class Listing {
     @NotNull
     private double quantity;
 
-    /** TODO
-     * This is going to be the reference to listing status table
-     */
     @NotNull
-    private double listing_status;
+    @OneToOne(cascade = CascadeType.PERSIST)
+    private ListingStatus listingStatus;
 
-    /** TODO
-     * This is going to be the reference to marketplace table
-     */
     @NotNull
-    private double marketplace;
+    @OneToOne(cascade = CascadeType.PERSIST)
+    private MarketPlace marketPlace;
 
     @Column(columnDefinition = "text")
     @NotNull
