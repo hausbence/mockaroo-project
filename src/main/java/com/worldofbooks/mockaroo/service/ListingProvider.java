@@ -31,7 +31,7 @@ public class ListingProvider {
     @Autowired
     ListingRepository listingRepository;
 
-    public String getAllListingObjects() throws UnirestException {
+    public JSONArray getAllListingObjects() throws UnirestException {
         String url = mockarooBaseUrl + "listing?key=" + apiKey;
         HttpResponse<JsonNode> response = Unirest.get(url)
             .asJson();
@@ -40,7 +40,7 @@ public class ListingProvider {
 
         //saveListingObjects(arrayOfListingObjects);
 
-        return getJson(response);
+        return arrayOfListingObjects;
     }
 
     /**

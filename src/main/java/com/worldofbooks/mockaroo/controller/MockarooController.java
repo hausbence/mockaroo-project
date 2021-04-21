@@ -28,7 +28,7 @@ public class MockarooController {
     MarketPlaceProvider marketPlaceProvider;
 
     @GetMapping("/listing")
-    private String getListingObjects() throws UnirestException {
+    private JSONArray getListingObjects() throws UnirestException {
         return listingProvider.getAllListingObjects();
     }
 
