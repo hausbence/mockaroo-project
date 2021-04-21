@@ -29,7 +29,7 @@ public class ListingStatusProvider {
     @Autowired
     ListingStatusRepository listingStatusRepository;
 
-    public String getAllListingStatusObjects() throws UnirestException {
+    public JSONArray getListingStatusObjectsJSONArray() throws UnirestException {
         String url = mockarooBaseUrl + "listingStatus?key=" + apiKey;
         HttpResponse<JsonNode> response = Unirest.get(url)
             .asJson();
@@ -37,7 +37,8 @@ public class ListingStatusProvider {
         JSONArray arrayOfListingStatusObjects = response.getBody().getArray();
 
         saveListingStatusObjects(arrayOfListingStatusObjects);
-        return getJson(response);
+
+        return arrayOfListingStatusObjects;
     }
 
     private void saveListingStatusObjects(JSONArray arrayOfListingStatusObjects) {
@@ -51,14 +52,6 @@ public class ListingStatusProvider {
             listingStatusRepository.save(listingStatus);
         }
 
-    }
-
-    private String getJson(HttpResponse<JsonNode> response) {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        JsonParser jp = new JsonParser();
-        JsonElement je = jp.parse(response.getBody().toString());
-
-        return gson.toJson(je);
     }
 
 }
