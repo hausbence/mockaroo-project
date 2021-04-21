@@ -21,15 +21,7 @@ public class MockarooController {
     ListingProvider listingProvider;
 
     @GetMapping("/listing")
-    private JSONArray getListingObjects() throws UnirestException {
+    private String getListingObjects() throws UnirestException {
         return listingProvider.getAllListingObjects();
-    }
-
-    private String getJson(HttpResponse<JsonNode> response) {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        JsonParser jp = new JsonParser();
-        JsonElement je = jp.parse(response.getBody().toString());
-
-        return gson.toJson(je);
     }
 }
