@@ -2,8 +2,10 @@ package com.worldofbooks.mockaroo.controller;
 
 import com.google.gson.*;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import com.worldofbooks.mockaroo.service.ListingProvider;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,21 +17,12 @@ import com.mashape.unirest.http.Unirest;
 @RestController
 public class MockarooController {
 
-    @Value("${mockaroo.url}")
-    private String mockarooBaseUrl;
-
-    @Value("${mockaroo.key}")
-    private String apiKey;
+    @Autowired
+    ListingProvider listingProvider;
 
     @GetMapping("/listing")
     private JSONArray getListingObjects() throws UnirestException {
-        String url = mockarooBaseUrl + "listing?key=" + apiKey;
-        HttpResponse<JsonNode> response = Unirest.get(url)
-            .asJson();
-
-        JSONArray arrayOfListingObjects = response.getBody().getArray();
-
-        return arrayOfListingObjects;
+        return listingProvider.getAllListingObjects();
     }
 
     private String getJson(HttpResponse<JsonNode> response) {
