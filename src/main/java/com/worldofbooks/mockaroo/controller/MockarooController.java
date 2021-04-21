@@ -5,6 +5,7 @@ import com.worldofbooks.mockaroo.entity.Location;
 import com.worldofbooks.mockaroo.service.ListingProvider;
 import com.worldofbooks.mockaroo.service.ListingStatusProvider;
 import com.worldofbooks.mockaroo.service.LocationProvider;
+import com.worldofbooks.mockaroo.service.MarketPlaceProvider;
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +24,9 @@ public class MockarooController {
     @Autowired
     LocationProvider locationProvider;
 
+    @Autowired
+    MarketPlaceProvider marketPlaceProvider;
+
     @GetMapping("/listing")
     private String getListingObjects() throws UnirestException {
         return listingProvider.getAllListingObjects();
@@ -36,5 +40,10 @@ public class MockarooController {
     @GetMapping("/location")
     private JSONArray getLocationObjects() throws UnirestException {
         return locationProvider.getLocationObjectsJSONArray();
+    }
+
+    @GetMapping("/marketplace")
+    private JSONArray getMarketPlaceObjects() throws UnirestException {
+        return marketPlaceProvider.getMarketPlaceObjectsJSONArray();
     }
 }
