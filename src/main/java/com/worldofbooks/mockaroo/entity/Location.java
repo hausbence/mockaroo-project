@@ -22,9 +22,6 @@ public class Location {
     @NotNull
     private UUID id;
 
-    @OneToOne(mappedBy = "location")
-    private Listing listing;
-
     @Column(columnDefinition = "text")
     private String manager_name;
 

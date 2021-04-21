@@ -38,7 +38,7 @@ public class ListingProvider {
 
         JSONArray arrayOfListingObjects = response.getBody().getArray();
 
-        saveListingObjects(arrayOfListingObjects);
+        //saveListingObjects(arrayOfListingObjects);
 
         return getJson(response);
     }
@@ -48,31 +48,31 @@ public class ListingProvider {
      * Building listingObject not working yet
      * Location, MarketPlace, ListingStatus needs to fetched before
      */
-    public void saveListingObjects(JSONArray listingObjects) {
-        for (Object object : listingObjects) {
-            Location location = new Location();
-            MarketPlace marketPlace = new MarketPlace();
-            ListingStatus listingStatus = new ListingStatus();
-            JSONObject jsonObject = (JSONObject) object;
-            Listing listingObject = Listing.builder()
-                .id(UUID.fromString((String) jsonObject.get("id")))
-                .upload_time((Date) jsonObject.get("upload_time"))
-                .quantity(jsonObject.getDouble("quantity"))
-                .marketPlace((MarketPlace) jsonObject.get("marketplace"))
-                .listingStatus((ListingStatus) jsonObject.get("listing_status"))
-                .description(jsonObject.getString("description"))
-                .listing_price(jsonObject.getDouble("listing_price"))
-                .currency(jsonObject.getString("currency"))
-                .owner_email_address(jsonObject.getString("owner_email_address"))
-                .title(jsonObject.getString("title"))
-                .location((Location) jsonObject.get("location"))
-                .build();
-
-            listingRepository.save(listingObject);
-
-        }
-
-    }
+//    public void saveListingObjects(JSONArray listingObjects) {
+//        for (Object object : listingObjects) {
+//            Location location = new Location();
+//            MarketPlace marketPlace = new MarketPlace();
+//            ListingStatus listingStatus = new ListingStatus();
+//            JSONObject jsonObject = (JSONObject) object;
+//            Listing listingObject = Listing.builder()
+//                .id(UUID.fromString((String) jsonObject.get("id")))
+//                .upload_time((Date) jsonObject.get("upload_time"))
+//                .quantity(jsonObject.getDouble("quantity"))
+//                .marketPlace((MarketPlace) jsonObject.get("marketplace"))
+//                .listingStatus((ListingStatus) jsonObject.get("listing_status"))
+//                .description(jsonObject.getString("description"))
+//                .listing_price(jsonObject.getDouble("listing_price"))
+//                .currency(jsonObject.getString("currency"))
+//                .owner_email_address(jsonObject.getString("owner_email_address"))
+//                .title(jsonObject.getString("title"))
+//                .location((Location) jsonObject.get("location"))
+//                .build();
+//
+//            listingRepository.save(listingObject);
+//
+//        }
+//
+//    }
 
     private String getJson(HttpResponse<JsonNode> response) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();

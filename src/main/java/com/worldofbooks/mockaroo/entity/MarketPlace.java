@@ -20,9 +20,6 @@ public class MarketPlace {
     @NotNull
     private Long id;
 
-    @OneToOne(mappedBy = "marketPlace")
-    private Listing listing;
-
     @Column(columnDefinition = "text")
     private String marketplace_name;
 }

@@ -1,4 +1,7 @@
 package com.worldofbooks.mockaroo.repository;
 
-public interface ListingStatusRepository {
+import com.worldofbooks.mockaroo.entity.ListingStatus;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ListingStatusRepository extends JpaRepository<ListingStatus, Long> {
 }
