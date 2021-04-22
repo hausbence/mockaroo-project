@@ -28,22 +28,22 @@ public class MockarooController {
     MarketPlaceProvider marketPlaceProvider;
 
     @GetMapping("/listing")
-    private JSONArray getListingObjects() throws UnirestException {
+    public JSONArray getListingObjects() throws Exception {
         return listingProvider.getAllListingObjects();
     }
 
     @GetMapping("/listingStatus")
-    private JSONArray getListingStatusObjects() throws UnirestException {
+    public JSONArray getListingStatusObjects() throws UnirestException {
         return listingStatusProvider.getListingStatusObjectsJSONArray();
     }
 
     @GetMapping("/location")
-    private JSONArray getLocationObjects() throws UnirestException {
+    public JSONArray getLocationObjects() throws UnirestException {
         return locationProvider.getLocationObjectsJSONArray();
     }
 
-    @GetMapping("/marketplace")
-    private JSONArray getMarketPlaceObjects() throws UnirestException {
+    @GetMapping("/marketPlace")
+    public JSONArray getMarketPlaceObjects() throws UnirestException {
         return marketPlaceProvider.getMarketPlaceObjectsJSONArray();
     }
 }

@@ -10,6 +10,9 @@ import com.worldofbooks.mockaroo.entity.ListingStatus;
 import com.worldofbooks.mockaroo.entity.Location;
 import com.worldofbooks.mockaroo.entity.MarketPlace;
 import com.worldofbooks.mockaroo.repository.ListingRepository;
+import com.worldofbooks.mockaroo.repository.ListingStatusRepository;
+import com.worldofbooks.mockaroo.repository.LocationRepository;
+import com.worldofbooks.mockaroo.repository.MarketPlaceRepository;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +20,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -31,48 +35,73 @@ public class ListingProvider {
     @Autowired
     ListingRepository listingRepository;
 
-    public JSONArray getAllListingObjects() throws UnirestException {
+    @Autowired
+    LocationRepository locationRepository;
+
+    @Autowired
+    ListingStatusRepository listingStatusRepository;
+
+    @Autowired
+    MarketPlaceRepository marketPlaceRepository;
+
+    public JSONArray getAllListingObjects() throws Exception {
         String url = mockarooBaseUrl + "listing?key=" + apiKey;
         HttpResponse<JsonNode> response = Unirest.get(url)
             .asJson();
 
         JSONArray arrayOfListingObjects = response.getBody().getArray();
 
-        //saveListingObjects(arrayOfListingObjects);
+        saveListingObjects(arrayOfListingObjects);
 
         return arrayOfListingObjects;
     }
 
     /**
      * TODO
-     * Building listingObject not working yet
-     * Location, MarketPlace, ListingStatus needs to fetched before
+     * Handling null values, and logging them to CSV.
      */
-//    public void saveListingObjects(JSONArray listingObjects) {
-//        for (Object object : listingObjects) {
-//            Location location = new Location();
-//            MarketPlace marketPlace = new MarketPlace();
-//            ListingStatus listingStatus = new ListingStatus();
-//            JSONObject jsonObject = (JSONObject) object;
-//            Listing listingObject = Listing.builder()
-//                .id(UUID.fromString((String) jsonObject.get("id")))
-//                .upload_time((Date) jsonObject.get("upload_time"))
-//                .quantity(jsonObject.getDouble("quantity"))
-//                .marketPlace((MarketPlace) jsonObject.get("marketplace"))
-//                .listingStatus((ListingStatus) jsonObject.get("listing_status"))
-//                .description(jsonObject.getString("description"))
-//                .listing_price(jsonObject.getDouble("listing_price"))
-//                .currency(jsonObject.getString("currency"))
-//                .owner_email_address(jsonObject.getString("owner_email_address"))
-//                .title(jsonObject.getString("title"))
-//                .location((Location) jsonObject.get("location"))
-//                .build();
-//
-//            listingRepository.save(listingObject);
-//
-//        }
-//
-//    }
+    public void saveListingObjects(JSONArray listingObjects) throws Exception {
+        for (Object object : listingObjects) {
+            Location location;
+            MarketPlace marketPlace;
+            ListingStatus listingStatus;
+            JSONObject listingJSONObject = (JSONObject) object;
+            if (locationRepository.findById(UUID.fromString((String) listingJSONObject.get("location_id"))).isPresent()) {
+                location = locationRepository.findById(UUID.fromString((String) listingJSONObject.get("location_id"))).get();
+            } else {
+                System.out.println("there is no location with this id --->   " + UUID.fromString((String) listingJSONObject.get("location_id")));
+                continue;
+            }
+            if (marketPlaceRepository.findById(listingJSONObject.getLong("marketplace")).isPresent()) {
+                marketPlace  = marketPlaceRepository.findById(listingJSONObject.getLong("marketplace")).get();
+            } else {
+                throw new Exception("There is no marketPlace with this ID");
+            }
+            if (listingStatusRepository.findById(listingJSONObject.getLong("listing_status")).isPresent()) {
+                listingStatus = listingStatusRepository.findById(listingJSONObject.getLong("listing_status")).get();
+            } else {
+                throw new Exception("There is no listingStatus with this ID");
+            }
+
+            Listing listingObject = Listing.builder()
+                .id(UUID.fromString((String) listingJSONObject.get("id")))
+                .upload_time((Date) listingJSONObject.get("upload_time"))
+                .quantity(listingJSONObject.getDouble("quantity"))
+                .marketPlace(marketPlace)
+                .listingStatus(listingStatus)
+                .description(listingJSONObject.getString("description"))
+                .listing_price(listingJSONObject.getDouble("listing_price"))
+                .currency(listingJSONObject.getString("currency"))
+                .owner_email_address(listingJSONObject.getString("owner_email_address"))
+                .title(listingJSONObject.getString("title"))
+                .location(location)
+                .build();
+
+            listingRepository.save(listingObject);
+
+        }
+
+    }
 
     private String getJson(HttpResponse<JsonNode> response) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();

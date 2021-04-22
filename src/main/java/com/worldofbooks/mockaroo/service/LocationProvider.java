@@ -45,10 +45,10 @@ public class LocationProvider {
                 .manager_name(jsonObject.getString("manager_name"))
                 .phone(jsonObject.getString("phone"))
                 .address_primary(jsonObject.getString("address_primary"))
-                .address_secondary(jsonObject.getString("address_secondary"))
+                .address_secondary(String.valueOf(jsonObject.get("address_secondary")))
                 .country(jsonObject.getString("country"))
                 .town(jsonObject.getString("town"))
-                .postal_code(jsonObject.getString("postal_code"))
+                .postal_code(String.valueOf(jsonObject.get("postal_code")))
                 .build();
 
             locationRepository.save(location);
