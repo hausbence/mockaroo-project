@@ -72,35 +72,43 @@ public class ListingProvider {
             if (locationRepository.findById(UUID.fromString((String) listingJSONObject.get("location_id"))).isPresent()) {
                 location = locationRepository.findById(UUID.fromString((String) listingJSONObject.get("location_id"))).get();
             } else {
+                location = null;
                 System.out.println("There is no location with this ID:  " + UUID.fromString((String) listingJSONObject.get("location_id")));
             }
             if (marketPlaceRepository.findById(listingJSONObject.getLong("marketplace")).isPresent()) {
                 marketPlace  = marketPlaceRepository.findById(listingJSONObject.getLong("marketplace")).get();
             } else {
+                marketPlace = null;
                 System.out.println("There is no marketplace with this ID:   " + listingJSONObject.getLong("marketplace"));
             }
             if (listingStatusRepository.findById(listingJSONObject.getLong("listing_status")).isPresent()) {
                 listingStatus = listingStatusRepository.findById(listingJSONObject.getLong("listing_status")).get();
             } else {
+                listingStatus = null;
                 System.out.println("There is no listing status with this ID: " + listingJSONObject.getLong("listing_status"));
             }
 
-            DateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
-            Listing listingObject = Listing.builder()
-                .id(UUID.fromString((String) listingJSONObject.get("id")))
-                .upload_time(simpleDateFormat.parse(String.valueOf(listingJSONObject.get("upload_time"))))
-                .quantity(listingJSONObject.getDouble("quantity"))
-                .marketPlace(marketPlace)
-                .listingStatus(listingStatus)
-                .description(listingJSONObject.getString("description"))
-                .listing_price(listingJSONObject.getDouble("listing_price"))
-                .currency(listingJSONObject.getString("currency"))
-                .owner_email_address(listingJSONObject.getString("owner_email_address"))
-                .title(listingJSONObject.getString("title"))
-                .location(location)
-                .build();
+            if (listingStatus == null || marketPlace == null || location == null) {
+                System.out.println("THEN LOG TO CSV AND DONT SAVE TO DB THAT LINE");
+            } else {
+                DateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
+                Listing listingObject = Listing.builder()
+                    .id(UUID.fromString((String) listingJSONObject.get("id")))
+                    .upload_time(simpleDateFormat.parse(String.valueOf(listingJSONObject.get("upload_time"))))
+                    .quantity(listingJSONObject.getDouble("quantity"))
+                    .marketPlace(marketPlace)
+                    .listingStatus(listingStatus)
+                    .description(listingJSONObject.getString("description"))
+                    .listing_price(listingJSONObject.getDouble("listing_price"))
+                    .currency(listingJSONObject.getString("currency"))
+                    .owner_email_address(listingJSONObject.getString("owner_email_address"))
+                    .title(listingJSONObject.getString("title"))
+                    .location(location)
+                    .build();
 
-            listingRepository.save(listingObject);
+                listingRepository.save(listingObject);
+            }
+
 
         }
 
