@@ -51,7 +51,7 @@ public class ListingProvider {
     @Autowired
     DataValidation dataValidation;
 
-    public JSONArray getAllListingObjects() throws Exception {
+    public JSONArray getAllListingObjectsJSONArray() throws Exception {
         String url = mockarooBaseUrl + "listing?key=" + apiKey;
         HttpResponse<JsonNode> response = Unirest.get(url)
             .asJson();
