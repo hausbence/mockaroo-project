@@ -38,15 +38,12 @@ public class Listing {
     private Location location;
 
     @NotNull
-    @Min(value = 1)
     private double listing_price;
 
-    @Column(columnDefinition = "text", length = 3)
-    @Size(min = 3, max = 3)
+    @Column(columnDefinition = "text")
     @NotNull
     private String currency;
 
-    @Min(value = 1)
     @NotNull
     private double quantity;
 
