@@ -94,7 +94,7 @@ public class DataValidation {
                 !isValidMarketplaceObject(listingJSONObject) ||
                 !isValidDate(listingJSONObject)) {
 
-                // ha valamelyik invalid akkor nem kéne menteni, meg nem is tudom lebuildelni
+                // If the object is invalid, I don't have to save it, I just need to log to CSV.
             }
         }
         return listOfInvalidListingObjects;
