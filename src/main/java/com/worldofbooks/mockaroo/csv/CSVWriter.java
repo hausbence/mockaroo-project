@@ -1,6 +1,6 @@
 package com.worldofbooks.mockaroo.csv;
 
-import com.worldofbooks.mockaroo.model.InvalidObject;
+import com.worldofbooks.mockaroo.model.InvalidListingObject;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.springframework.stereotype.Service;
@@ -14,11 +14,11 @@ public class CSVWriter {
 
     String[] HEADERS = { "ListingId", "MarketplaceName", "InvalidField"};
 
-    public void createCSVFile(List<InvalidObject> invalidObjects) throws IOException {
+    public void createCSVFile(List<InvalidListingObject> invalidListingObjects) throws IOException {
         FileWriter out = new FileWriter("importLog.csv");
         try (CSVPrinter printer = new CSVPrinter(out, CSVFormat.DEFAULT.withHeader(HEADERS))) {
-            for(InvalidObject invalidObject : invalidObjects)
-                printer.printRecord(invalidObject.getListingId(), invalidObject.getMarketPlaceName(), invalidObject.getInvalidFieldName());
+            for(InvalidListingObject invalidListingObject : invalidListingObjects)
+                printer.printRecord(invalidListingObject.getListingId(), invalidListingObject.getMarketPlaceName(), invalidListingObject.getInvalidFieldName());
         }
     }
 

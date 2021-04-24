@@ -4,7 +4,7 @@ import com.worldofbooks.mockaroo.entity.Listing;
 import com.worldofbooks.mockaroo.entity.ListingStatus;
 import com.worldofbooks.mockaroo.entity.Location;
 import com.worldofbooks.mockaroo.entity.MarketPlace;
-import com.worldofbooks.mockaroo.model.InvalidObject;
+import com.worldofbooks.mockaroo.model.InvalidListingObject;
 import com.worldofbooks.mockaroo.repository.ListingStatusRepository;
 import com.worldofbooks.mockaroo.repository.LocationRepository;
 import com.worldofbooks.mockaroo.repository.MarketPlaceRepository;
@@ -21,7 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
-public class DataValidation {
+public class DataValidator {
 
     @Autowired
     LocationRepository locationRepository;
@@ -33,7 +33,7 @@ public class DataValidation {
     MarketPlaceRepository marketPlaceRepository;
 
     @Getter
-    private List<InvalidObject> invalidObjects = new ArrayList<>();
+    private List<InvalidListingObject> invalidListingObjects = new ArrayList<>();
 
 
     public List<Listing> getListWithValidElements(JSONArray listingJSONArray) throws ParseException {
@@ -95,18 +95,18 @@ public class DataValidation {
     }
 
     private void addInvalidObject(JSONObject listingJSONObject, String key) {
-        InvalidObject invalidObject;
+        InvalidListingObject invalidListingObject;
         Optional<MarketPlace> marketPlace = marketPlaceRepository.findById(listingJSONObject.getLong("marketplace"));
         Object listingId = listingJSONObject.get("id");
         if (marketPlace.isPresent() && listingId != null) {
             String marketPlaceName = marketPlace.get().getMarketplace_name();
-            invalidObject = new InvalidObject(UUID.fromString((String) listingId), marketPlaceName, key);
+            invalidListingObject = new InvalidListingObject(UUID.fromString((String) listingId), marketPlaceName, key);
         } else {
-            invalidObject = marketPlace
-                .map(place -> new InvalidObject(UUID.fromString("null"), place.getMarketplace_name(), key))
-                .orElseGet(() -> new InvalidObject(UUID.fromString((String) listingId), "null", key));
+            invalidListingObject = marketPlace
+                .map(place -> new InvalidListingObject(UUID.fromString("null"), place.getMarketplace_name(), key))
+                .orElseGet(() -> new InvalidListingObject(UUID.fromString((String) listingId), "null", key));
         }
-        invalidObjects.add(invalidObject);
+        invalidListingObjects.add(invalidListingObject);
 
     }
 

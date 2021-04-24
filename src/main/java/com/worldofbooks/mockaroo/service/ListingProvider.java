@@ -9,7 +9,7 @@ import com.worldofbooks.mockaroo.repository.ListingRepository;
 import com.worldofbooks.mockaroo.repository.ListingStatusRepository;
 import com.worldofbooks.mockaroo.repository.LocationRepository;
 import com.worldofbooks.mockaroo.repository.MarketPlaceRepository;
-import com.worldofbooks.mockaroo.validation.DataValidation;
+import com.worldofbooks.mockaroo.validation.DataValidator;
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,7 +39,7 @@ public class ListingProvider {
     MarketPlaceRepository marketPlaceRepository;
 
     @Autowired
-    DataValidation dataValidation;
+    DataValidator dataValidator;
 
     @Autowired
     CSVWriter csvWriter;
@@ -51,9 +51,9 @@ public class ListingProvider {
 
         JSONArray arrayOfListingObjects = response.getBody().getArray();
 
-        List<Listing> validListingObjects = dataValidation.getListWithValidElements(arrayOfListingObjects);
+        List<Listing> validListingObjects = dataValidator.getListWithValidElements(arrayOfListingObjects);
         saveValidatedListingObjects(validListingObjects);
-        csvWriter.createCSVFile(dataValidation.getInvalidObjects());
+        csvWriter.createCSVFile(dataValidator.getInvalidListingObjects());
 
         return arrayOfListingObjects;
     }

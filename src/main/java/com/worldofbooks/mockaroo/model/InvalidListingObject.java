@@ -9,7 +9,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 @Data
-public class InvalidObject {
+public class InvalidListingObject {
 
     private UUID listingId;
 
