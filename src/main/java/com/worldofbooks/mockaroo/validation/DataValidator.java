@@ -33,7 +33,7 @@ public class DataValidator {
     MarketPlaceRepository marketPlaceRepository;
 
     @Getter
-    private List<InvalidListingObject> invalidListingObjects = new ArrayList<>();
+    private final List<InvalidListingObject> invalidListingObjects = new ArrayList<>();
 
 
     public List<Listing> getListWithValidElements(JSONArray listingJSONArray) throws ParseException {
@@ -72,15 +72,14 @@ public class DataValidator {
     }
 
     private boolean isEveryStatementValid(JSONObject listingJSONObject) {
-        return
-            notContainsNullElement(listingJSONObject) &&
-                isValidLocationObject(listingJSONObject.getString("location_id")) &&
-                isValidListingPrice(listingJSONObject.getDouble("listing_price")) &&
-                isValidCurrency(listingJSONObject.getString("currency")) &&
-                isValidQuantity(listingJSONObject.getInt("quantity")) &&
-                isValidEmailAddress(listingJSONObject.getString("owner_email_address")) &&
-                isValidListingStatusObject(listingJSONObject.getLong("listing_status")) &&
-                isValidMarketplaceObject(listingJSONObject.getLong("marketplace"));
+        return notContainsNullElement(listingJSONObject) &&
+            isValidLocationObject(listingJSONObject) &&
+            isValidListingPrice(listingJSONObject) &&
+            isValidCurrency(listingJSONObject) &&
+            isValidQuantity(listingJSONObject) &&
+            isValidEmailAddress(listingJSONObject) &&
+            isValidListingStatusObject(listingJSONObject) &&
+            isValidMarketplaceObject(listingJSONObject);
     }
 
     private boolean notContainsNullElement(JSONObject listingJSONObject) {
@@ -95,53 +94,76 @@ public class DataValidator {
     }
 
     private void addInvalidObject(JSONObject listingJSONObject, String key) {
-        InvalidListingObject invalidListingObject;
-        Optional<MarketPlace> marketPlace = marketPlaceRepository.findById(listingJSONObject.getLong("marketplace"));
         Object listingId = listingJSONObject.get("id");
-        if (marketPlace.isPresent() && listingId != null) {
-            String marketPlaceName = marketPlace.get().getMarketplace_name();
-            invalidListingObject = new InvalidListingObject(UUID.fromString((String) listingId), marketPlaceName, key);
+        Optional<MarketPlace> marketPlace = marketPlaceRepository.findById(listingJSONObject.getLong("marketplace"));
+        if (key.equals("marketplace")) {
+            invalidListingObjects.add(new InvalidListingObject(UUID.fromString((String) listingId), "null", key));
+        } else if (key.equals("id")) {
+            invalidListingObjects.add(new InvalidListingObject(UUID.fromString("null"), marketPlace.get().getMarketplace_name(), key));
         } else {
-            invalidListingObject = marketPlace
-                .map(place -> new InvalidListingObject(UUID.fromString("null"), place.getMarketplace_name(), key))
-                .orElseGet(() -> new InvalidListingObject(UUID.fromString((String) listingId), "null", key));
+            invalidListingObjects.add(new InvalidListingObject(UUID.fromString((String) listingId), marketPlace.get().getMarketplace_name(), key));
         }
-        invalidListingObjects.add(invalidListingObject);
-
     }
 
-    public boolean isValidLocationObject(String locationId) {
-        return locationId != null && locationRepository.findById(UUID.fromString(locationId)).isPresent();
-    }
-
-    public boolean isValidListingPrice(Double listing_price) {
-        if (listing_price == null) {
+    public boolean isValidLocationObject(JSONObject listingJSONObject) {
+        String locationId = listingJSONObject.getString("location_id");
+        if (locationId == null || !locationRepository.findById(UUID.fromString(locationId)).isPresent()) {
+            addInvalidObject(listingJSONObject, "location_id");
             return false;
         }
+        return true;
+    }
+
+    public boolean isValidListingPrice(JSONObject listingJSONObject) {
+        double listing_price = listingJSONObject.getDouble("listing_price");
         BigDecimal bigDecimalListingPrice = BigDecimal.valueOf(listing_price);
 
-        return listing_price > 0 && bigDecimalListingPrice.scale() == 2;
+        if (listing_price <= 0 || bigDecimalListingPrice.scale() != 2) {
+            addInvalidObject(listingJSONObject, "listing_price");
+            return false;
+        }
+        return true;
     }
 
-    public boolean isValidCurrency(String currency) {
-        return currency != null && currency.length() == 3;
+    public boolean isValidCurrency(JSONObject listingJSONObject) {
+        if (listingJSONObject.getString("currency").length() != 3) {
+            addInvalidObject(listingJSONObject, "currency");
+            return false;
+        }
+        return true;
     }
 
-    public boolean isValidQuantity(Integer quantity) {
-        return quantity != null && quantity > 0;
+    public boolean isValidQuantity(JSONObject listingJSONObject) {
+        if (listingJSONObject.getInt("quantity") <= 0) {
+            addInvalidObject(listingJSONObject, "quantity");
+            return false;
+        }
+        return true;
     }
 
-    public boolean isValidEmailAddress(String emailAddress) {
+    public boolean isValidEmailAddress(JSONObject listingJSONObject) {
         String emailRegex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
-        return emailAddress != null && emailAddress.matches(emailRegex);
+        if (!listingJSONObject.getString("owner_email_address").matches(emailRegex)) {
+            addInvalidObject(listingJSONObject, "owner_email_address");
+            return false;
+        }
+        return true;
     }
 
-    public boolean isValidListingStatusObject(Long statusId) {
-        return statusId != null && listingStatusRepository.findById(statusId).isPresent();
+    public boolean isValidListingStatusObject(JSONObject listingJSONObject) {
+        if (!listingStatusRepository.findById(listingJSONObject.getLong("listing_status")).isPresent()) {
+            addInvalidObject(listingJSONObject, "listing_status");
+            return false;
+        }
+        return true;
     }
 
-    public boolean isValidMarketplaceObject(Long marketPlaceId) {
-        return marketPlaceId != null && marketPlaceRepository.findById(marketPlaceId).isPresent();
+    public boolean isValidMarketplaceObject(JSONObject listingJSONObject) {
+        if (!marketPlaceRepository.findById(listingJSONObject.getLong("marketplace")).isPresent()) {
+            addInvalidObject(listingJSONObject, "marketplace");
+            return false;
+        }
+        return true;
     }
 
 }
