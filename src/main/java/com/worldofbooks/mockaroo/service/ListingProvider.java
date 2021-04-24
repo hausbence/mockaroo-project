@@ -3,6 +3,7 @@ package com.worldofbooks.mockaroo.service;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
+import com.worldofbooks.mockaroo.csv.CSVWriter;
 import com.worldofbooks.mockaroo.entity.Listing;
 import com.worldofbooks.mockaroo.repository.ListingRepository;
 import com.worldofbooks.mockaroo.repository.ListingStatusRepository;
@@ -40,6 +41,9 @@ public class ListingProvider {
     @Autowired
     DataValidation dataValidation;
 
+    @Autowired
+    CSVWriter csvWriter;
+
     public JSONArray getAllListingObjectsJSONArray() throws Exception {
         String url = mockarooBaseUrl + "listing?key=" + apiKey;
         HttpResponse<JsonNode> response = Unirest.get(url)
@@ -49,6 +53,7 @@ public class ListingProvider {
 
         List<Listing> validListingObjects = dataValidation.getListWithValidElements(arrayOfListingObjects);
         saveValidatedListingObjects(validListingObjects);
+        csvWriter.createCSVFile(dataValidation.getInvalidObjects());
 
         return arrayOfListingObjects;
     }

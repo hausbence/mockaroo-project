@@ -4,9 +4,11 @@ import com.worldofbooks.mockaroo.entity.Listing;
 import com.worldofbooks.mockaroo.entity.ListingStatus;
 import com.worldofbooks.mockaroo.entity.Location;
 import com.worldofbooks.mockaroo.entity.MarketPlace;
+import com.worldofbooks.mockaroo.model.InvalidObject;
 import com.worldofbooks.mockaroo.repository.ListingStatusRepository;
 import com.worldofbooks.mockaroo.repository.LocationRepository;
 import com.worldofbooks.mockaroo.repository.MarketPlaceRepository;
+import lombok.Getter;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,9 @@ public class DataValidation {
 
     @Autowired
     MarketPlaceRepository marketPlaceRepository;
+
+    @Getter
+    private List<InvalidObject> invalidObjects = new ArrayList<>();
 
 
     public List<Listing> getListWithValidElements(JSONArray listingJSONArray) throws ParseException {
@@ -82,22 +87,27 @@ public class DataValidation {
         Set<String> set = listingJSONObject.keySet();
         for (String key : set) {
             if (listingJSONObject.get(key) == null || listingJSONObject.isNull(key)) {
+                addInvalidObject(listingJSONObject, key);
                 return false;
             }
         }
         return true;
     }
 
-    public List<Listing> getArrayWithInvalidElements(JSONArray listingJSONArray) {
-        List<Listing> listOfInvalidListingObjects = new ArrayList<>();
-        for (Object object : listingJSONArray) {
-            JSONObject listingJSONObject = (JSONObject) object;
-            if (!isEveryStatementValid(listingJSONObject)) {
-                //Log to csv. : listingJSONObject.get("id") , findMarketPlaceNameById, the field which is invalid
-                // If the object is invalid, I don't have to save it, I just need to log to CSV.
-            }
+    private void addInvalidObject(JSONObject listingJSONObject, String key) {
+        InvalidObject invalidObject;
+        Optional<MarketPlace> marketPlace = marketPlaceRepository.findById(listingJSONObject.getLong("marketplace"));
+        Object listingId = listingJSONObject.get("id");
+        if (marketPlace.isPresent() && listingId != null) {
+            String marketPlaceName = marketPlace.get().getMarketplace_name();
+            invalidObject = new InvalidObject(UUID.fromString((String) listingId), marketPlaceName, key);
+        } else {
+            invalidObject = marketPlace
+                .map(place -> new InvalidObject(UUID.fromString("null"), place.getMarketplace_name(), key))
+                .orElseGet(() -> new InvalidObject(UUID.fromString((String) listingId), "null", key));
         }
-        return listOfInvalidListingObjects;
+        invalidObjects.add(invalidObject);
+
     }
 
     public boolean isValidLocationObject(String locationId) {

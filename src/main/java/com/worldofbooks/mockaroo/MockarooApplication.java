@@ -30,9 +30,9 @@ public class MockarooApplication {
 
     @Bean
     void init() throws Exception {
-        //marketPlaceProvider.getMarketPlaceObjectsJSONArray();
-        //listingStatusProvider.getListingStatusObjectsJSONArray();
-        //locationProvider.getLocationObjectsJSONArray();
+        marketPlaceProvider.getMarketPlaceObjectsJSONArray();
+        listingStatusProvider.getListingStatusObjectsJSONArray();
+        locationProvider.getLocationObjectsJSONArray();
         listingProvider.getAllListingObjectsJSONArray();
     }
 
