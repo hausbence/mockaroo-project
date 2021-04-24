@@ -1,31 +1,20 @@
 package com.worldofbooks.mockaroo.service;
 
-import com.google.gson.*;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import com.worldofbooks.mockaroo.entity.Listing;
-import com.worldofbooks.mockaroo.entity.ListingStatus;
-import com.worldofbooks.mockaroo.entity.Location;
-import com.worldofbooks.mockaroo.entity.MarketPlace;
 import com.worldofbooks.mockaroo.repository.ListingRepository;
 import com.worldofbooks.mockaroo.repository.ListingStatusRepository;
 import com.worldofbooks.mockaroo.repository.LocationRepository;
 import com.worldofbooks.mockaroo.repository.MarketPlaceRepository;
 import com.worldofbooks.mockaroo.validation.DataValidation;
 import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class ListingProvider {
@@ -58,8 +47,8 @@ public class ListingProvider {
 
         JSONArray arrayOfListingObjects = response.getBody().getArray();
 
-        List<Listing> validListingObjects = dataValidation.getArrayWithValidElements(arrayOfListingObjects);
-        saveListingObjects(validListingObjects);
+        List<Listing> validListingObjects = dataValidation.getListWithValidElements(arrayOfListingObjects);
+        saveValidatedListingObjects(validListingObjects);
 
         return arrayOfListingObjects;
     }
@@ -68,7 +57,7 @@ public class ListingProvider {
      * TODO
      * Handling null values, and logging them to CSV.
      */
-    public void saveListingObjects(List<Listing> validListingObjects) throws Exception {
+    public void saveValidatedListingObjects(List<Listing> validListingObjects) throws Exception {
         for (Listing listingObject : validListingObjects) {
             listingRepository.save(listingObject);
         }

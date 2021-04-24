@@ -35,7 +35,7 @@ public class DataValidation {
     MarketPlaceRepository marketPlaceRepository;
 
 
-    public List<Listing> getArrayWithValidElements(JSONArray listingJSONArray) throws ParseException {
+    public List<Listing> getListWithValidElements(JSONArray listingJSONArray) throws ParseException {
         List<Listing> listOfValidListingObjects = new ArrayList<>();
 
         DateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
@@ -45,16 +45,7 @@ public class DataValidation {
 
         for (Object object : listingJSONArray) {
             JSONObject listingJSONObject = (JSONObject) object;
-            if (isValidTitle(listingJSONObject) &&
-                isValidDescription(listingJSONObject) &&
-                isValidLocationObject(listingJSONObject) &&
-                isValidListingPrice(listingJSONObject) &&
-                isValidCurrency(listingJSONObject) &&
-                isValidQuantity(listingJSONObject) &&
-                isValidEmailAddress(listingJSONObject) &&
-                isValidListngStatusObject(listingJSONObject) &&
-                isValidMarketplaceObject(listingJSONObject) &&
-                isValidDate(listingJSONObject)) {
+            if (isEveryStatementValid(listingJSONObject)) {
                 location = locationRepository.findById(UUID.fromString((String) listingJSONObject.get("location_id"))).get();
                 listingStatus = listingStatusRepository.findById(listingJSONObject.getLong("listing_status")).get();
                 marketPlace = marketPlaceRepository.findById(listingJSONObject.getLong("marketplace")).get();
@@ -79,21 +70,25 @@ public class DataValidation {
         return listOfValidListingObjects;
     }
 
+    private boolean isEveryStatementValid(JSONObject listingJSONObject) {
+        return isValidTitle(listingJSONObject) &&
+            isValidDescription(listingJSONObject) &&
+            isValidLocationObject(listingJSONObject) &&
+            isValidListingPrice(listingJSONObject) &&
+            isValidCurrency(listingJSONObject) &&
+            isValidQuantity(listingJSONObject) &&
+            isValidEmailAddress(listingJSONObject) &&
+            isValidListingStatusObject(listingJSONObject) &&
+            isValidMarketplaceObject(listingJSONObject) &&
+            isValidDate(listingJSONObject);
+    }
+
     public List<Listing> getArrayWithInvalidElements(JSONArray listingJSONArray) {
         List<Listing> listOfInvalidListingObjects = new ArrayList<>();
         for (Object object : listingJSONArray) {
             JSONObject listingJSONObject = (JSONObject) object;
-            if (!isValidTitle(listingJSONObject) ||
-                !isValidDescription(listingJSONObject) ||
-                !isValidLocationObject(listingJSONObject) ||
-                !isValidListingPrice(listingJSONObject) ||
-                !isValidCurrency(listingJSONObject) ||
-                !isValidQuantity(listingJSONObject) ||
-                !isValidEmailAddress(listingJSONObject) ||
-                !isValidListngStatusObject(listingJSONObject) ||
-                !isValidMarketplaceObject(listingJSONObject) ||
-                !isValidDate(listingJSONObject)) {
-
+            if (!isEveryStatementValid(listingJSONObject)) {
+                //Log to csv. : listingJSONObject.get("id") , findMarketPlaceNameById, the field which is invalid
                 // If the object is invalid, I don't have to save it, I just need to log to CSV.
             }
         }
@@ -115,7 +110,7 @@ public class DataValidation {
     public boolean isValidListingPrice(JSONObject listingJSONObject) {
         BigDecimal bigDecimalListingPrice = BigDecimal.valueOf(listingJSONObject.getDouble("listing_price"));
 
-        if (listingJSONObject.getDouble("listing_price") < 0 ||
+        if (listingJSONObject.getDouble("listing_price") < 1 ||
                 listingJSONObject.getDouble("listing_price") == 0 ||
                     String.valueOf(listingJSONObject.get("listing_price")).equals("null") ||
                         bigDecimalListingPrice.scale() != 2) { return false; }
@@ -124,7 +119,9 @@ public class DataValidation {
     }
 
     public boolean isValidCurrency(JSONObject listingJSONObject) {
-        return !String.valueOf(listingJSONObject.get("currency")).equals("null") && listingJSONObject.getString("currency").length() != 3;
+        if (listingJSONObject.getString("currency").length() != 3 || String.valueOf(listingJSONObject.get("currency")).equals("null")) {
+            return false;
+        } else return true;
     }
 
     public boolean isValidQuantity(JSONObject listingJSONObject) {
@@ -137,7 +134,7 @@ public class DataValidation {
         return emailAddress.matches(emailRegex);
     }
 
-    public boolean isValidListngStatusObject(JSONObject listingJSONObject) {
+    public boolean isValidListingStatusObject(JSONObject listingJSONObject) {
         return listingStatusRepository.findById(listingJSONObject.getLong("listing_status")).isPresent();
     }
 
