@@ -1,12 +1,14 @@
 package com.worldofbooks.mockaroo.service;
 
+import com.google.gson.Gson;
 import com.worldofbooks.mockaroo.entity.Listing;
 import com.worldofbooks.mockaroo.model.Report;
 import com.worldofbooks.mockaroo.repository.ListingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 @Service
@@ -17,7 +19,7 @@ public class ReportProvider {
 
 
     public Report getReport() {
-        return Report.builder()
+        Report report = Report.builder()
             .totalListingCount(getTotalListingCount())
             .totalEbayListingCount(getTotalEbayListingCount())
             .totalEbayListingPrice(getTotalEbayListingPrice())
@@ -27,6 +29,8 @@ public class ReportProvider {
             .avgAmazonListingPrice(getAvgAmazonListingPrice())
             .bestListerEmailAddress(getBestListerEmailAddress())
             .build();
+
+        return report;
     }
 
     private String getBestListerEmailAddress() {
@@ -34,7 +38,7 @@ public class ReportProvider {
     }
 
     private double getAvgAmazonListingPrice() {
-        return listingRepository.getAvgListingPriceByMarketPlaceId(Long.parseLong(String.valueOf(1)));
+        return round(listingRepository.getAvgListingPriceByMarketPlaceId(Long.parseLong(String.valueOf(1))),2);
     }
 
     private double getTotalAmazonListingPrice() {
@@ -43,7 +47,7 @@ public class ReportProvider {
         for (Listing listing : amazonListings) {
             totalAmazonListingPrice += listing.getListing_price();
         }
-        return totalAmazonListingPrice;
+        return round(totalAmazonListingPrice, 2);
     }
 
     private double getTotalAmazonListingCount() {
@@ -51,7 +55,7 @@ public class ReportProvider {
     }
 
     private double getAvgEbayListingPrice() {
-        return listingRepository.getAvgListingPriceByMarketPlaceId(Long.parseLong(String.valueOf(2)));
+        return round(listingRepository.getAvgListingPriceByMarketPlaceId(Long.parseLong(String.valueOf(2))),2);
     }
 
     private double getTotalEbayListingPrice() {
@@ -60,7 +64,7 @@ public class ReportProvider {
         for (Listing listing : ebayListings) {
             totalEbayListingPrice += listing.getListing_price();
         }
-        return totalEbayListingPrice;
+        return round(totalEbayListingPrice, 2);
     }
 
 
@@ -70,5 +74,13 @@ public class ReportProvider {
 
     private int getTotalEbayListingCount() {
         return listingRepository.getAllByMarketPlaceId(Long.parseLong(String.valueOf(2))).size();
+    }
+
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        BigDecimal bd = BigDecimal.valueOf(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
     }
 }
