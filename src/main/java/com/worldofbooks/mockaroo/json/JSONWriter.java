@@ -5,6 +5,7 @@ import com.worldofbooks.mockaroo.model.Report;
 import com.worldofbooks.mockaroo.service.ReportProvider;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -16,6 +17,12 @@ public class JSONWriter {
 
     @Autowired
     ReportProvider reportProvider;
+
+    @Value("${ftp.username}")
+    String ftpUser;
+
+    @Value("${ftp.password}")
+    String ftpPassword;
 
 
     public void createJSONFile() throws IOException {
@@ -39,7 +46,7 @@ public class JSONWriter {
     }
 
     private void uploadToFtp(String fileName) throws IOException {
-        FtpClient ftpClient = new FtpClient("192.168.0.22", 21, "", "");
+        FtpClient ftpClient = new FtpClient("192.168.0.22", 21, ftpUser, ftpPassword);
         ftpClient.open();
         ftpClient.putFileToPath("src/main/resources/ftp/" + fileName, "/" + fileName);
     }
