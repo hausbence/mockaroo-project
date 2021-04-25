@@ -8,6 +8,7 @@ import com.worldofbooks.mockaroo.model.InvalidListingObject;
 import com.worldofbooks.mockaroo.repository.ListingStatusRepository;
 import com.worldofbooks.mockaroo.repository.LocationRepository;
 import com.worldofbooks.mockaroo.repository.MarketPlaceRepository;
+import com.worldofbooks.mockaroo.util.Util;
 import lombok.Getter;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -58,7 +59,7 @@ public class DataValidator {
                     .marketPlace(marketPlace)
                     .listingStatus(listingStatus)
                     .description(listingJSONObject.getString("description"))
-                    .listing_price(listingJSONObject.getDouble("listing_price"))
+                    .listing_price(Util.round(listingJSONObject.getDouble("listing_price"),2))
                     .currency(listingJSONObject.getString("currency"))
                     .owner_email_address(listingJSONObject.getString("owner_email_address"))
                     .title(listingJSONObject.getString("title"))

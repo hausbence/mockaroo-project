@@ -30,15 +30,6 @@ public class ListingProvider {
     ListingRepository listingRepository;
 
     @Autowired
-    LocationRepository locationRepository;
-
-    @Autowired
-    ListingStatusRepository listingStatusRepository;
-
-    @Autowired
-    MarketPlaceRepository marketPlaceRepository;
-
-    @Autowired
     DataValidator dataValidator;
 
     @Autowired
@@ -58,10 +49,6 @@ public class ListingProvider {
         return arrayOfListingObjects;
     }
 
-    /**
-     * TODO
-     * Handling null values, and logging them to CSV.
-     */
     public void saveValidatedListingObjects(List<Listing> validListingObjects) throws Exception {
         for (Listing listingObject : validListingObjects) {
             listingRepository.save(listingObject);

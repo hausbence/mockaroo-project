@@ -23,9 +23,6 @@ public class MockarooApplication {
     MarketPlaceProvider marketPlaceProvider;
 
     @Autowired
-    ReportProvider reportProvider;
-
-    @Autowired
     JSONWriter jsonWriter;
 
     public static void main(String[] args) {

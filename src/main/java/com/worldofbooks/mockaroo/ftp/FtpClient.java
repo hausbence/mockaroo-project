@@ -2,14 +2,9 @@ package com.worldofbooks.mockaroo.ftp;
 
 import org.apache.commons.net.PrintCommandListener;
 import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
-import org.springframework.stereotype.Service;
 
 import java.io.*;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.stream.Collectors;
 
 public class FtpClient {
 
@@ -43,13 +38,6 @@ public class FtpClient {
 
     public void close() throws IOException {
         ftp.disconnect();
-    }
-
-    Collection<String> listFiles(String path) throws IOException {
-        FTPFile[] files = ftp.listFiles(path);
-        return Arrays.stream(files)
-            .map(FTPFile::getName)
-            .collect(Collectors.toList());
     }
 
     public void downloadFile(String source, String destination) throws IOException {

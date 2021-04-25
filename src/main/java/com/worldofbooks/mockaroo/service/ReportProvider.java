@@ -1,14 +1,11 @@
 package com.worldofbooks.mockaroo.service;
 
-import com.google.gson.Gson;
 import com.worldofbooks.mockaroo.entity.Listing;
 import com.worldofbooks.mockaroo.model.Report;
 import com.worldofbooks.mockaroo.repository.ListingRepository;
+import com.worldofbooks.mockaroo.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.List;
 
 @Service
@@ -38,7 +35,7 @@ public class ReportProvider {
     }
 
     private double getAvgAmazonListingPrice() {
-        return round(listingRepository.getAvgListingPriceByMarketPlaceId(Long.parseLong(String.valueOf(1))),2);
+        return listingRepository.getAvgListingPriceByMarketPlaceId(Long.parseLong(String.valueOf(1)));
     }
 
     private double getTotalAmazonListingPrice() {
@@ -47,7 +44,7 @@ public class ReportProvider {
         for (Listing listing : amazonListings) {
             totalAmazonListingPrice += listing.getListing_price();
         }
-        return round(totalAmazonListingPrice, 2);
+        return totalAmazonListingPrice;
     }
 
     private double getTotalAmazonListingCount() {
@@ -55,7 +52,7 @@ public class ReportProvider {
     }
 
     private double getAvgEbayListingPrice() {
-        return round(listingRepository.getAvgListingPriceByMarketPlaceId(Long.parseLong(String.valueOf(2))),2);
+        return listingRepository.getAvgListingPriceByMarketPlaceId(Long.parseLong(String.valueOf(2)));
     }
 
     private double getTotalEbayListingPrice() {
@@ -64,7 +61,7 @@ public class ReportProvider {
         for (Listing listing : ebayListings) {
             totalEbayListingPrice += listing.getListing_price();
         }
-        return round(totalEbayListingPrice, 2);
+        return totalEbayListingPrice;
     }
 
 
@@ -74,13 +71,5 @@ public class ReportProvider {
 
     private int getTotalEbayListingCount() {
         return listingRepository.getAllByMarketPlaceId(Long.parseLong(String.valueOf(2))).size();
-    }
-
-    public static double round(double value, int places) {
-        if (places < 0) throw new IllegalArgumentException();
-
-        BigDecimal bd = BigDecimal.valueOf(value);
-        bd = bd.setScale(places, RoundingMode.HALF_UP);
-        return bd.doubleValue();
     }
 }
