@@ -1,9 +1,6 @@
 package com.worldofbooks.mockaroo;
 
-import com.worldofbooks.mockaroo.service.ListingProvider;
-import com.worldofbooks.mockaroo.service.ListingStatusProvider;
-import com.worldofbooks.mockaroo.service.LocationProvider;
-import com.worldofbooks.mockaroo.service.MarketPlaceProvider;
+import com.worldofbooks.mockaroo.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -23,6 +20,9 @@ public class MockarooApplication {
 
     @Autowired
     MarketPlaceProvider marketPlaceProvider;
+
+    @Autowired
+    ReportProvider reportProvider;
 
     public static void main(String[] args) {
         SpringApplication.run(MockarooApplication.class, args);

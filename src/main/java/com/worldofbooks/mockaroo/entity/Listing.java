@@ -55,7 +55,6 @@ public class Listing {
     @OneToOne(cascade = CascadeType.PERSIST)
     private MarketPlace marketPlace;
 
-    @Column(columnDefinition = "text")
     @NotNull
     private Date upload_time;
 

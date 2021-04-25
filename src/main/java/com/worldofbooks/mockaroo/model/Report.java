@@ -4,14 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-import java.util.List;
-
 @AllArgsConstructor
 @Builder
 @Data
 public class Report {
 
-    private int totalListingCount;
+    private long totalListingCount;
 
     private int totalEbayListingCount;
 
@@ -19,14 +17,12 @@ public class Report {
 
     private double avgEbayListingPrice;
 
-    private int totalAmazonListingCount;
+    private double totalAmazonListingCount;
 
     private double totalAmazonListingPrice;
 
     private double avgAmazonListingPrice;
 
-    private int bestListerEmailAddress;
-
-    private List<MonthlyReport> monthlyReports;
+    private String bestListerEmailAddress;
 
 }
