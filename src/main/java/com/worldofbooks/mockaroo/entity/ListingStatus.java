@@ -20,9 +20,6 @@ public class ListingStatus {
     @NotNull
     private Long id;
 
-    @OneToOne(mappedBy = "listingStatus")
-    private Listing listing;
-
     @Column(columnDefinition = "text")
     private String status_name;
 

@@ -37,17 +37,13 @@ public class Listing {
     @OneToOne(cascade = CascadeType.PERSIST)
     private Location location;
 
-    @Column(columnDefinition = "Decimal(10,2)")
-    @Min(value = 1)
     @NotNull
     private double listing_price;
 
-    @Column(columnDefinition = "text", length = 3)
-    @Size(min = 3, max = 3)
+    @Column(columnDefinition = "text")
     @NotNull
     private String currency;
 
-    @Min(value = 1)
     @NotNull
     private double quantity;
 
@@ -65,6 +61,5 @@ public class Listing {
 
     @Column(columnDefinition = "text")
     @NotNull
-    @Email
     private String owner_email_address;
 }
