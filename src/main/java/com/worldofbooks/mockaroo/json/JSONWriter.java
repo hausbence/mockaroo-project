@@ -1,11 +1,13 @@
 package com.worldofbooks.mockaroo.json;
 
+import com.worldofbooks.mockaroo.ftp.FtpClient;
 import com.worldofbooks.mockaroo.model.Report;
 import com.worldofbooks.mockaroo.service.ReportProvider;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -28,8 +30,17 @@ public class JSONWriter {
         jsonObject.put("Average Amazon listing price:", report.getAvgAmazonListingPrice());
         jsonObject.put("Best lister email address", report.getBestListerEmailAddress());
 
-        FileWriter jsonFile = new FileWriter("report.json");
+        String fileName = "report.json";
+        FileWriter jsonFile = new FileWriter("src/main/resources/ftp/" + fileName);
         jsonFile.write(jsonObject.toString());
         jsonFile.close();
+
+        uploadToFtp(fileName);
+    }
+
+    private void uploadToFtp(String fileName) throws IOException {
+        FtpClient ftpClient = new FtpClient("192.168.0.22", 21, "", "");
+        ftpClient.open();
+        ftpClient.putFileToPath("src/main/resources/ftp/" + fileName, "/" + fileName);
     }
 }
