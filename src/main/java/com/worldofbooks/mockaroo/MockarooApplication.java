@@ -35,7 +35,8 @@ public class MockarooApplication {
         listingStatusProvider.getListingStatusObjectsJSONArray();
         locationProvider.getLocationObjectsJSONArray();
         listingProvider.getAllListingObjectsJSONArray();
-        jsonWriter.createJSONFile();
+        String fileName = jsonWriter.getJsonFile();
+        jsonWriter.uploadToFtp(fileName);
     }
 
 }

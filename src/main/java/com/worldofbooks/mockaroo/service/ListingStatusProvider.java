@@ -25,7 +25,8 @@ public class ListingStatusProvider {
     ListingStatusRepository listingStatusRepository;
 
     public JSONArray getListingStatusObjectsJSONArray() throws UnirestException {
-        String url = mockarooBaseUrl + "listingStatus?key=" + apiKey;
+        //String url = mockarooBaseUrl + "listingStatus?key=" + apiKey;
+        String url = "http://localhost:8080/listingStatus";
         HttpResponse<JsonNode> response = Unirest.get(url)
             .asJson();
 

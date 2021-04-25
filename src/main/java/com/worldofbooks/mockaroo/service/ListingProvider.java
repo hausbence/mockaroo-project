@@ -6,9 +6,6 @@ import com.mashape.unirest.http.Unirest;
 import com.worldofbooks.mockaroo.csv.CSVWriter;
 import com.worldofbooks.mockaroo.entity.Listing;
 import com.worldofbooks.mockaroo.repository.ListingRepository;
-import com.worldofbooks.mockaroo.repository.ListingStatusRepository;
-import com.worldofbooks.mockaroo.repository.LocationRepository;
-import com.worldofbooks.mockaroo.repository.MarketPlaceRepository;
 import com.worldofbooks.mockaroo.validation.DataValidator;
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +33,8 @@ public class ListingProvider {
     CSVWriter csvWriter;
 
     public JSONArray getAllListingObjectsJSONArray() throws Exception {
-        String url = mockarooBaseUrl + "listing?key=" + apiKey;
+        //String url = mockarooBaseUrl + "listing?key=" + apiKey;
+        String url = "http://localhost:8080/listing";
         HttpResponse<JsonNode> response = Unirest.get(url)
             .asJson();
 

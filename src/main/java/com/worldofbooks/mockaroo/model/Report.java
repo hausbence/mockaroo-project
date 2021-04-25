@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.List;
+
 @AllArgsConstructor
 @Builder
 @Data
@@ -24,5 +26,9 @@ public class Report {
     private double avgAmazonListingPrice;
 
     private String bestListerEmailAddress;
+
+    private List<Object> monthlyEbayReports;
+
+    private List<Object> monthlyAmazonReports;
 
 }

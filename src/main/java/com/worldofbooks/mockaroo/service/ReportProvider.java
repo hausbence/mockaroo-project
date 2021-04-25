@@ -3,9 +3,10 @@ package com.worldofbooks.mockaroo.service;
 import com.worldofbooks.mockaroo.entity.Listing;
 import com.worldofbooks.mockaroo.model.Report;
 import com.worldofbooks.mockaroo.repository.ListingRepository;
-import com.worldofbooks.mockaroo.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -16,6 +17,9 @@ public class ReportProvider {
 
 
     public Report getReport() {
+        List<Object> monthlyEbayReports = Arrays.asList(getMonthlyEbayData());
+        List<Object> monthlyAmazonReports = Arrays.asList(getMonthlyAmazonData());
+
         Report report = Report.builder()
             .totalListingCount(getTotalListingCount())
             .totalEbayListingCount(getTotalEbayListingCount())
@@ -25,6 +29,8 @@ public class ReportProvider {
             .totalAmazonListingPrice(getTotalAmazonListingPrice())
             .avgAmazonListingPrice(getAvgAmazonListingPrice())
             .bestListerEmailAddress(getBestListerEmailAddress())
+            .monthlyEbayReports(monthlyEbayReports)
+            .monthlyAmazonReports(monthlyAmazonReports)
             .build();
 
         return report;
@@ -71,5 +77,13 @@ public class ReportProvider {
 
     private int getTotalEbayListingCount() {
         return listingRepository.getAllByMarketPlaceId(Long.parseLong(String.valueOf(2))).size();
+    }
+
+    private Object[] getMonthlyEbayData() {
+        return listingRepository.getMonthlyEbayData();
+    }
+
+    private Object[] getMonthlyAmazonData() {
+        return listingRepository.getMonthlyAmazonData();
     }
 }
