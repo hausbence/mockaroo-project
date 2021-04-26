@@ -37,8 +37,7 @@ public class ListingProvider {
      * Make calls for saving the valid elements & logging the invalid elements.
      */
     public void fetchAndHandleListingObjects() throws Exception {
-        //String url = mockarooBaseUrl + "listing?key=" + apiKey;
-        String url = "http://localhost:8080/listing";
+        String url = mockarooBaseUrl + "listing?key=" + apiKey;
         HttpResponse<JsonNode> response = Unirest.get(url)
             .asJson();
 

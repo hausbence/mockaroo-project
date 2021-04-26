@@ -25,8 +25,7 @@ public class ListingStatusProvider {
     ListingStatusRepository listingStatusRepository;
 
     public void fetchAndHandleListingStatusObjects() throws UnirestException {
-        //String url = mockarooBaseUrl + "listingStatus?key=" + apiKey;
-        String url = "http://localhost:8080/listingStatus";
+        String url = mockarooBaseUrl + "listingStatus?key=" + apiKey;
         HttpResponse<JsonNode> response = Unirest.get(url)
             .asJson();
 

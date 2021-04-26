@@ -27,8 +27,7 @@ public class LocationProvider {
     LocationRepository locationRepository;
 
     public void fetchAndHandleLocationObjects() throws UnirestException {
-        //String url = mockarooBaseUrl + "location?key=" + apiKey;
-        String url = "http://localhost:8080/location";
+        String url = mockarooBaseUrl + "location?key=" + apiKey;
         HttpResponse<JsonNode> response = Unirest.get(url)
             .asJson();
 
