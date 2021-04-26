@@ -26,15 +26,14 @@ public class LocationProvider {
     @Autowired
     LocationRepository locationRepository;
 
-    public JSONArray getLocationObjectsJSONArray() throws UnirestException {
-        String url = mockarooBaseUrl + "location?key=" + apiKey;
+    public void fetchAndHandleLocationObjects() throws UnirestException {
+        //String url = mockarooBaseUrl + "location?key=" + apiKey;
+        String url = "http://localhost:8080/location";
         HttpResponse<JsonNode> response = Unirest.get(url)
             .asJson();
 
         JSONArray arrayOfLocationObjects = response.getBody().getArray();
         saveLocationObjects(arrayOfLocationObjects);
-
-        return arrayOfLocationObjects;
     }
 
     private void saveLocationObjects(JSONArray arrayOfLocationObjects) {

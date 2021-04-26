@@ -8,6 +8,7 @@ import com.worldofbooks.mockaroo.model.InvalidListingObject;
 import com.worldofbooks.mockaroo.repository.ListingStatusRepository;
 import com.worldofbooks.mockaroo.repository.LocationRepository;
 import com.worldofbooks.mockaroo.repository.MarketPlaceRepository;
+import com.worldofbooks.mockaroo.util.Util;
 import lombok.Getter;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -36,6 +37,11 @@ public class DataValidator {
     private final List<InvalidListingObject> invalidListingObjects = new ArrayList<>();
 
 
+    /**
+     * Validates and fill up a List with Listing objects
+     * @param listingJSONArray The array with the fetched data with objects
+     * @return A list with validated List objects
+     */
     public List<Listing> getListWithValidElements(JSONArray listingJSONArray) throws ParseException {
         List<Listing> listOfValidListingObjects = new ArrayList<>();
 
@@ -58,7 +64,7 @@ public class DataValidator {
                     .marketPlace(marketPlace)
                     .listingStatus(listingStatus)
                     .description(listingJSONObject.getString("description"))
-                    .listing_price(listingJSONObject.getDouble("listing_price"))
+                    .listing_price(Util.round(listingJSONObject.getDouble("listing_price"),2))
                     .currency(listingJSONObject.getString("currency"))
                     .owner_email_address(listingJSONObject.getString("owner_email_address"))
                     .title(listingJSONObject.getString("title"))
@@ -82,6 +88,11 @@ public class DataValidator {
             isValidMarketplaceObject(listingJSONObject);
     }
 
+    /**
+     * Checks if null element is present in the object and calls addInvalidObject method on it.
+     * @param listingJSONObject List with Listing objects
+     * @return False if null element is present. True if there is no null element.
+     */
     private boolean notContainsNullElement(JSONObject listingJSONObject) {
         Set<String> set = listingJSONObject.keySet();
         for (String key : set) {

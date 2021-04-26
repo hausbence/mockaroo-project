@@ -5,11 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Formula;
-import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
 import java.util.Date;
 import java.util.UUID;
 
@@ -55,7 +52,6 @@ public class Listing {
     @OneToOne(cascade = CascadeType.PERSIST)
     private MarketPlace marketPlace;
 
-    @Column(columnDefinition = "text")
     @NotNull
     private Date upload_time;
 

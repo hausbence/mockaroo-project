@@ -1,14 +1,9 @@
 package com.worldofbooks.mockaroo.service;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import com.worldofbooks.mockaroo.entity.Listing;
 import com.worldofbooks.mockaroo.entity.ListingStatus;
 import com.worldofbooks.mockaroo.repository.ListingStatusRepository;
 import org.json.JSONArray;
@@ -29,8 +24,9 @@ public class ListingStatusProvider {
     @Autowired
     ListingStatusRepository listingStatusRepository;
 
-    public JSONArray getListingStatusObjectsJSONArray() throws UnirestException {
-        String url = mockarooBaseUrl + "listingStatus?key=" + apiKey;
+    public void fetchAndHandleListingStatusObjects() throws UnirestException {
+        //String url = mockarooBaseUrl + "listingStatus?key=" + apiKey;
+        String url = "http://localhost:8080/listingStatus";
         HttpResponse<JsonNode> response = Unirest.get(url)
             .asJson();
 
@@ -38,7 +34,6 @@ public class ListingStatusProvider {
 
         saveListingStatusObjects(arrayOfListingStatusObjects);
 
-        return arrayOfListingStatusObjects;
     }
 
     private void saveListingStatusObjects(JSONArray arrayOfListingStatusObjects) {

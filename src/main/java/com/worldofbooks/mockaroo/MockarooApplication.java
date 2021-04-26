@@ -1,9 +1,7 @@
 package com.worldofbooks.mockaroo;
 
-import com.worldofbooks.mockaroo.service.ListingProvider;
-import com.worldofbooks.mockaroo.service.ListingStatusProvider;
-import com.worldofbooks.mockaroo.service.LocationProvider;
-import com.worldofbooks.mockaroo.service.MarketPlaceProvider;
+import com.worldofbooks.mockaroo.json.JSONWriter;
+import com.worldofbooks.mockaroo.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -24,16 +22,25 @@ public class MockarooApplication {
     @Autowired
     MarketPlaceProvider marketPlaceProvider;
 
+    @Autowired
+    JSONWriter jsonWriter;
+
     public static void main(String[] args) {
         SpringApplication.run(MockarooApplication.class, args);
     }
 
+    /**
+     * Fetches all the data needed for creating the database and fills it up.
+     * Creates a report to a Json file and uploads it to Ftp
+     */
     @Bean
     void init() throws Exception {
-        marketPlaceProvider.getMarketPlaceObjectsJSONArray();
-        listingStatusProvider.getListingStatusObjectsJSONArray();
-        locationProvider.getLocationObjectsJSONArray();
-        listingProvider.getAllListingObjectsJSONArray();
+        marketPlaceProvider.fetchAndHandleMarketplaceObjects();
+        listingStatusProvider.fetchAndHandleListingStatusObjects();
+        locationProvider.fetchAndHandleLocationObjects();
+        listingProvider.fetchAndHandleListingObjects();
+        String fileName = jsonWriter.getJsonFile();
+        jsonWriter.uploadToFtp(fileName);
     }
 
 }
