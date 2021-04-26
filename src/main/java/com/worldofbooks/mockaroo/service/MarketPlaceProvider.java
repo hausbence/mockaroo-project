@@ -25,8 +25,7 @@ public class MarketPlaceProvider {
     MarketPlaceRepository marketPlaceRepository;
 
     public void fetchAndHandleMarketplaceObjects() throws UnirestException {
-        //String url = mockarooBaseUrl + "marketplace?key=" + apiKey;
-        String url = "http://localhost:8080/marketplace";
+        String url = mockarooBaseUrl + "marketplace?key=" + apiKey;
         HttpResponse<JsonNode> response = Unirest.get(url)
             .asJson();
 
