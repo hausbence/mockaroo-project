@@ -37,6 +37,11 @@ public class DataValidator {
     private final List<InvalidListingObject> invalidListingObjects = new ArrayList<>();
 
 
+    /**
+     * Validates and fill up a List with Listing objects
+     * @param listingJSONArray The array with the fetched data with objects
+     * @return A list with validated List objects
+     */
     public List<Listing> getListWithValidElements(JSONArray listingJSONArray) throws ParseException {
         List<Listing> listOfValidListingObjects = new ArrayList<>();
 
@@ -83,6 +88,11 @@ public class DataValidator {
             isValidMarketplaceObject(listingJSONObject);
     }
 
+    /**
+     * Checks if null element is present in the object and calls addInvalidObject method on it.
+     * @param listingJSONObject List with Listing objects
+     * @return False if null element is present. True if there is no null element.
+     */
     private boolean notContainsNullElement(JSONObject listingJSONObject) {
         Set<String> set = listingJSONObject.keySet();
         for (String key : set) {

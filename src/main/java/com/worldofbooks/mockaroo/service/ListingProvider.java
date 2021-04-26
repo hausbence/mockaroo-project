@@ -32,7 +32,11 @@ public class ListingProvider {
     @Autowired
     CSVWriter csvWriter;
 
-    public JSONArray getAllListingObjectsJSONArray() throws Exception {
+    /**
+     * Fetches the data from Mockaroo API.
+     * Make calls for saving the valid elements & logging the invalid elements.
+     */
+    public void fetchAndHandleListingObjects() throws Exception {
         //String url = mockarooBaseUrl + "listing?key=" + apiKey;
         String url = "http://localhost:8080/listing";
         HttpResponse<JsonNode> response = Unirest.get(url)
@@ -43,11 +47,9 @@ public class ListingProvider {
         List<Listing> validListingObjects = dataValidator.getListWithValidElements(arrayOfListingObjects);
         saveValidatedListingObjects(validListingObjects);
         csvWriter.createCSVFile(dataValidator.getInvalidListingObjects());
-
-        return arrayOfListingObjects;
     }
 
-    public void saveValidatedListingObjects(List<Listing> validListingObjects) throws Exception {
+    public void saveValidatedListingObjects(List<Listing> validListingObjects) {
         for (Listing listingObject : validListingObjects) {
             listingRepository.save(listingObject);
         }

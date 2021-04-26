@@ -24,7 +24,7 @@ public class ListingStatusProvider {
     @Autowired
     ListingStatusRepository listingStatusRepository;
 
-    public JSONArray getListingStatusObjectsJSONArray() throws UnirestException {
+    public void fetchAndHandleListingStatusObjects() throws UnirestException {
         //String url = mockarooBaseUrl + "listingStatus?key=" + apiKey;
         String url = "http://localhost:8080/listingStatus";
         HttpResponse<JsonNode> response = Unirest.get(url)
@@ -34,7 +34,6 @@ public class ListingStatusProvider {
 
         saveListingStatusObjects(arrayOfListingStatusObjects);
 
-        return arrayOfListingStatusObjects;
     }
 
     private void saveListingStatusObjects(JSONArray arrayOfListingStatusObjects) {

@@ -40,11 +40,6 @@ public class FtpClient {
         ftp.disconnect();
     }
 
-    public void downloadFile(String source, String destination) throws IOException {
-        FileOutputStream out = new FileOutputStream(destination);
-        ftp.retrieveFile(source, out);
-    }
-
     public void putFileToPath(String file, String path) throws IOException {
         ftp.storeFile(path, new FileInputStream(String.valueOf(file)));
     }

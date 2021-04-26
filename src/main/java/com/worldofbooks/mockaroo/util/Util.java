@@ -5,6 +5,12 @@ import java.math.RoundingMode;
 
 public class Util {
 
+    /**
+     * Rounds a double value to @param places decimals
+     * @param value the number we want to round
+     * @param places the number of decimals
+     * @return double
+     */
     public static double round(double value, int places) {
         if (places < 0) throw new IllegalArgumentException();
 

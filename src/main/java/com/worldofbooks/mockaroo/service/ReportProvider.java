@@ -3,6 +3,7 @@ package com.worldofbooks.mockaroo.service;
 import com.worldofbooks.mockaroo.entity.Listing;
 import com.worldofbooks.mockaroo.model.Report;
 import com.worldofbooks.mockaroo.repository.ListingRepository;
+import com.worldofbooks.mockaroo.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,11 +17,15 @@ public class ReportProvider {
     ListingRepository listingRepository;
 
 
+    /**
+     * Creates a Report object and fills it up with the data.
+     * @return Report
+     */
     public Report getReport() {
         List<Object> monthlyEbayReports = Arrays.asList(getMonthlyEbayData());
         List<Object> monthlyAmazonReports = Arrays.asList(getMonthlyAmazonData());
 
-        Report report = Report.builder()
+        return Report.builder()
             .totalListingCount(getTotalListingCount())
             .totalEbayListingCount(getTotalEbayListingCount())
             .totalEbayListingPrice(getTotalEbayListingPrice())
@@ -32,8 +37,6 @@ public class ReportProvider {
             .monthlyEbayReports(monthlyEbayReports)
             .monthlyAmazonReports(monthlyAmazonReports)
             .build();
-
-        return report;
     }
 
     private String getBestListerEmailAddress() {
@@ -41,7 +44,7 @@ public class ReportProvider {
     }
 
     private double getAvgAmazonListingPrice() {
-        return listingRepository.getAvgListingPriceByMarketPlaceId(Long.parseLong(String.valueOf(1)));
+        return Util.round(listingRepository.getAvgListingPriceByMarketPlaceId(Long.parseLong(String.valueOf(1))),2);
     }
 
     private double getTotalAmazonListingPrice() {
@@ -50,15 +53,15 @@ public class ReportProvider {
         for (Listing listing : amazonListings) {
             totalAmazonListingPrice += listing.getListing_price();
         }
-        return totalAmazonListingPrice;
+        return Util.round(totalAmazonListingPrice,2);
     }
 
     private double getTotalAmazonListingCount() {
-        return listingRepository.countListingByMarketPlaceId(Long.parseLong(String.valueOf(1)));
+        return Util.round(listingRepository.countListingByMarketPlaceId(Long.parseLong(String.valueOf(1))),2);
     }
 
     private double getAvgEbayListingPrice() {
-        return listingRepository.getAvgListingPriceByMarketPlaceId(Long.parseLong(String.valueOf(2)));
+        return Util.round(listingRepository.getAvgListingPriceByMarketPlaceId(Long.parseLong(String.valueOf(2))),2);
     }
 
     private double getTotalEbayListingPrice() {
@@ -67,7 +70,7 @@ public class ReportProvider {
         for (Listing listing : ebayListings) {
             totalEbayListingPrice += listing.getListing_price();
         }
-        return totalEbayListingPrice;
+        return Util.round(totalEbayListingPrice,2);
     }
 
 

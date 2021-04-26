@@ -25,6 +25,11 @@ public class JSONWriter {
     String ftpPassword;
 
 
+    /**
+     * Creates and then then fills up a JSONFile with report data.
+     * @return String The name of the created file
+     * @throws IOException if the path in the FileWriter is wrong
+     */
     public String getJsonFile() throws IOException {
         Report report = reportProvider.getReport();
         JSONObject jsonObject = new JSONObject();
@@ -37,11 +42,10 @@ public class JSONWriter {
         jsonObject.put("Average Amazon listing price:", report.getAvgAmazonListingPrice());
         jsonObject.put("Best lister email address", report.getBestListerEmailAddress());
 
-        JSONArray array = new JSONArray();
-        addMonthlyEbayReport(report, array);
-        addMonthlyAmazonReport(report,array);
-        jsonObject.put("Monthly reports: ", array);
-
+        JSONArray monthlyObjectArray = new JSONArray();
+        addMonthlyEbayReport(report, monthlyObjectArray);
+        addMonthlyAmazonReport(report,monthlyObjectArray);
+        jsonObject.put("Monthly reports: ", monthlyObjectArray);
 
         String fileName = "report.json";
         FileWriter jsonFile = new FileWriter("src/main/resources/ftp/" + fileName);

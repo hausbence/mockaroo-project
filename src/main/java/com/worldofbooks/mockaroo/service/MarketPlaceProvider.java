@@ -24,7 +24,7 @@ public class MarketPlaceProvider {
     @Autowired
     MarketPlaceRepository marketPlaceRepository;
 
-    public JSONArray getMarketPlaceObjectsJSONArray() throws UnirestException {
+    public void fetchAndHandleMarketplaceObjects() throws UnirestException {
         //String url = mockarooBaseUrl + "marketplace?key=" + apiKey;
         String url = "http://localhost:8080/marketplace";
         HttpResponse<JsonNode> response = Unirest.get(url)
@@ -32,8 +32,6 @@ public class MarketPlaceProvider {
 
         JSONArray arrayOfMarketPlaceObjects = response.getBody().getArray();
         saveMarketPlaceObjects(arrayOfMarketPlaceObjects);
-
-        return arrayOfMarketPlaceObjects;
     }
 
     private void saveMarketPlaceObjects(JSONArray arrayOfMarketPlaceObjects) {
