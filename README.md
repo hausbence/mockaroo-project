@@ -8,7 +8,7 @@
 
  
 ## Usage
-Before you use it, the FTP and Database credentials needs to be defined
+Before you use it, the FTP and Database credentials need to be defined
  
 ## API
  [Mockaroo](https://www.mockaroo.com)
