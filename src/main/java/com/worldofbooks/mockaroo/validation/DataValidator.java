@@ -90,7 +90,7 @@ public class DataValidator {
 
     /**
      * Checks if null element is present in the object and calls addInvalidObject method on it.
-     * @param listingJSONObject List with Listing objects
+     * @param listingJSONObject Listing object to check
      * @return False if null element is present. True if there is no null element.
      */
     private boolean notContainsNullElement(JSONObject listingJSONObject) {
