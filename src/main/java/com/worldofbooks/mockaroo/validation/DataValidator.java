@@ -21,6 +21,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+/**
+ * If an object is valid it is getting added to validListingObjects
+ * while if it's invalid it is getting added to invalidListingObjects
+ */
 @Service
 public class DataValidator {
 
@@ -43,7 +47,7 @@ public class DataValidator {
      * @return A list with validated List objects
      */
     public List<Listing> getListWithValidElements(JSONArray listingJSONArray) throws ParseException {
-        List<Listing> listOfValidListingObjects = new ArrayList<>();
+        List<Listing> validListingObjects = new ArrayList<>();
 
         DateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
         Location location;
@@ -71,10 +75,10 @@ public class DataValidator {
                     .location(location)
                     .build();
 
-                listOfValidListingObjects.add(listingObject);
+                validListingObjects.add(listingObject);
             }
         }
-        return listOfValidListingObjects;
+        return validListingObjects;
     }
 
     private boolean isEveryStatementValid(JSONObject listingJSONObject) {
@@ -90,7 +94,7 @@ public class DataValidator {
 
     /**
      * Checks if null element is present in the object and calls addInvalidObject method on it.
-     * @param listingJSONObject List with Listing objects
+     * @param listingJSONObject Listing object to check
      * @return False if null element is present. True if there is no null element.
      */
     private boolean notContainsNullElement(JSONObject listingJSONObject) {
